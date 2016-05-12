@@ -11,6 +11,8 @@ describe('Class Positive Attributes', function() {
     expect(introSpanish).to.have.property("name");
     expect(introSpanish).to.have.property("capacity");
     expect(introSpanish.capacity).to.equal(40);
+    expect(introSpanish.classSize()).to.equal(0);
+    expect(introSpanish.creditSize()).to.equal(0);
   });
 });
 
@@ -67,9 +69,9 @@ describe("Class Positive Actions", function() {
     });
 
     it("should add time slots and display them in sorted order", function() {
-      introSpanish.addTimeslot("MONDAY_AFTERNOON");
-      introSpanish.addTimeslot("FRIDAY_AFTERNOON");
-      introSpanish.addTimeslot("WEDNESDAY_MORNING");
+      introSpanish.addTimeslot(Timeslots.MONDAY_AFTERNOON);
+      introSpanish.addTimeslot(Timeslots.FRIDAY_AFTERNOON);
+      introSpanish.addTimeslot(Timeslots.WEDNESDAY_MORNING);
       expect(introSpanish.creditSize()).to.equal(3);
       var timeslotVals = [];
       introSpanish.timeslots.forEach(function(ts) {
@@ -79,10 +81,10 @@ describe("Class Positive Actions", function() {
     });
 
     it("should remove time slots and display the results in the correct order", function() {
-      introSpanish.addTimeslot("MONDAY_AFTERNOON");
-      introSpanish.addTimeslot("FRIDAY_AFTERNOON");
-      introSpanish.addTimeslot("WEDNESDAY_MORNING");
-      introSpanish.removeTimeslot("MONDAY_AFTERNOON");
+      introSpanish.addTimeslot(Timeslots.MONDAY_AFTERNOON);
+      introSpanish.addTimeslot(Timeslots.FRIDAY_AFTERNOON);
+      introSpanish.addTimeslot(Timeslots.WEDNESDAY_MORNING);
+      introSpanish.removeTimeslot(Timeslots.MONDAY_AFTERNOON);
       expect(introSpanish.creditSize()).to.equal(2);
       var timeslotVals = [];
       introSpanish.timeslots.forEach(function(ts) {
@@ -156,24 +158,24 @@ describe("Class Negative Actions", function() {
     });
 
     it("should not allow a timeslot to be removed if it is already present", function() {
-      introSpanish.addTimeslot("THURSDAY_MORNING");
+      introSpanish.addTimeslot(Timeslots.THURSDAY_MORNING);
       expect(function() {
-        introSpanish.addTimeslot("THURSDAY_MORNING");
+        introSpanish.addTimeslot(Timeslots.THURSDAY_MORNING);
       }).to.throw("Class already has this timeslot");
     });
 
     it("should not allow a timeslot removal that is not within the established list of timeslots", function() {
-      introSpanish.addTimeslot("TUESDAY_AFTERNOON");
+      introSpanish.addTimeslot(Timeslots.TUESDAY_AFTERNOON);
       expect(function() {
         introSpanish.removeTimeslot("TUESDAY_NIGHT");
       }).to.throw("Must only remove proper Timeslot values");
     });
 
     it("should not allow a timeslot to be removed if it is already not present", function() {
-      introSpanish.addTimeslot("TUESDAY_AFTERNOON");
-      introSpanish.removeTimeslot("TUESDAY_AFTERNOON");
+      introSpanish.addTimeslot(Timeslots.TUESDAY_AFTERNOON);
+      introSpanish.removeTimeslot(Timeslots.TUESDAY_AFTERNOON);
       expect(function() {
-        introSpanish.removeTimeslot("TUESDAY_AFTERNOON");
+        introSpanish.removeTimeslot(Timeslots.TUESDAY_AFTERNOON);
       }).to.throw("Class already does not have this timeslot");
     });
   });
