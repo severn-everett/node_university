@@ -1,6 +1,7 @@
 var chai = require('chai');
 var expect = chai.expect;
 var _ = require("underscore");
+
 var Class = require("../lib/class.js");
 var Student = require("../lib/student.js");
 var Timeslots = require("../lib/timeslots.js");
@@ -73,9 +74,8 @@ describe("Class Positive Actions", function() {
       introSpanish.addTimeslot(Timeslots.FRIDAY_AFTERNOON);
       introSpanish.addTimeslot(Timeslots.WEDNESDAY_MORNING);
       expect(introSpanish.creditSize()).to.equal(3);
-      var timeslotVals = [];
-      introSpanish.timeslots.forEach(function(ts) {
-        timeslotVals.push(ts.value);
+      var timeslotVals = introSpanish.timeslots.map(function(ts) {
+        return ts.value;
       });
       expect(_.isEqual(timeslotVals, [2,7,14])).to.be.true;
     });
@@ -86,9 +86,8 @@ describe("Class Positive Actions", function() {
       introSpanish.addTimeslot(Timeslots.WEDNESDAY_MORNING);
       introSpanish.removeTimeslot(Timeslots.MONDAY_AFTERNOON);
       expect(introSpanish.creditSize()).to.equal(2);
-      var timeslotVals = [];
-      introSpanish.timeslots.forEach(function(ts) {
-        timeslotVals.push(ts.value);
+      var timeslotVals = introSpanish.timeslots.map(function(ts) {
+        return ts.value;
       });
       expect(_.isEqual(timeslotVals, [7,14])).to.be.true;
     });
