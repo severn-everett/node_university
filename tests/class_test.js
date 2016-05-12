@@ -19,43 +19,49 @@ describe('Class Negative Attributes', function() {
     }).to.throw("A non-blank name must be provided");
   });
 
-  it("should require that a positive student capacity is provided", function() {
-    expect(function() {
-      var emptyClass = new Class("Introduction to Spanish", "Zero");
-    }).to.throw("Capacity must be a positive integer");
-    expect(function() {
-      var emptyClass = new Class("Introduction to Spanish", 0);
-    }).to.throw("Capacity must be greater than zero");
-  });
+  var invalid_capacities = {
+    "a string": "Zero",
+    "a non-positive integer": 0,
+    "a decimal": 10.5
+  };
+
+  for (bad_type in invalid_capacities) {
+    it("should not allow the student capacity to be " + bad_type, function() {
+      expect(function() {
+        var emptyClass = new Class("Introduction to Spanish", invalid_capacities[bad_type]);
+      }).to.throw("Capacity must be a positive integer greater than zero");
+    });
+  }
 });
 
 describe("Class Positive Actions", function() {
   var introSpanish = new Class("Introduction to Spanish", 40);
+  var john = new Student("John");
+  var jane = new Student("Jane");
 
   afterEach(function() {
     introSpanish.studentList.clear();
   });
 
   it("should add students and display its class size", function() {
-    var studentOne = new Student("John");
-    var studentTwo = new Student("Jane");
-    introSpanish.addStudent(studentOne);
-    introSpanish.addStudent(studentTwo);
+    introSpanish.addStudent(john);
+    introSpanish.addStudent(jane);
     expect(introSpanish.classSize()).to.equal(2);
   });
 
   it("should allow for removing students", function() {
-    var studentOne = new Student("John");
-    var studentTwo = new Student("Jane");
-    introSpanish.addStudent(studentOne);
-    introSpanish.addStudent(studentTwo);
-    introSpanish.removeStudent(studentOne);
+    introSpanish.addStudent(john);
+    introSpanish.addStudent(jane);
+    introSpanish.removeStudent(john);
     expect(introSpanish.classSize()).to.equal(1);
   });
 });
 
 describe("Class Negative Actions", function() {
   var introSpanish = new Class("Introduction to Spanish", 2);
+  var larry = new Student("Larry");
+  var curly = new Student("Curly");
+  var moe = new Student("Moe");
 
   afterEach(function() {
     introSpanish.studentList.clear();
@@ -63,32 +69,32 @@ describe("Class Negative Actions", function() {
 
   it("should only allow students to be added to classes", function() {
     expect(function() {
-      introSpanish.addStudent("Jane");
+      introSpanish.addStudent("Groucho");
     }).to.throw(Error);
   });
 
   it("should not allow more students to be added when the class is at capacity", function() {
-    var studentOne = new Student("Larry");
-    var studentTwo = new Student("Curly");
-    var studentThree = new Student("Moe");
     expect(function() {
-      introSpanish.addStudent(studentOne);
-      introSpanish.addStudent(studentTwo);
+      introSpanish.addStudent(larry);
+      introSpanish.addStudent(curly);
     }).to.not.throw(Error);
     expect(function() {
-      introSpanish.addStudent(studentThree);
+      introSpanish.addStudent(moe);
     }).to.throw("Class is already at capacity of 2");
   });
 
   it("should fail to remove students when there are no students registered for the class", function() {
-    var studentOne = new Student("Larry");
-    var studentTwo = new Student("Curly");
-    var studentThree = new Student("Moe");
-
-    introSpanish.addStudent(studentOne);
-    introSpanish.removeStudent(studentOne);
+    introSpanish.addStudent(larry);
+    introSpanish.removeStudent(larry);
     expect(function() {
-      introSpanish.removeStudent(studentTwo);
+      introSpanish.removeStudent(curly);
     }).to.throw("Class is already empty");
+  });
+
+  it("should not remove a student that is not registered for the class", function() {
+    introSpanish.addStudent(larry);
+    expect(function() {
+      introSpanish.removeStudent(curly);
+    }).to.throw("Cannot remove student \"Curly\" - not registered for this class");
   });
 });
