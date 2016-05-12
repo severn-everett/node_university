@@ -83,6 +83,13 @@ describe("Class Negative Actions", function() {
     }).to.throw("Class is already at capacity of 2");
   });
 
+  it("should not allow a student to be added multiple times", function() {
+    introSpanish.addStudent(larry);
+    expect(function() {
+      introSpanish.addStudent(larry);
+    }).to.throw("Student \"Larry\" already added to this class");
+  });
+
   it("should fail to remove students when there are no students registered for the class", function() {
     introSpanish.addStudent(larry);
     introSpanish.removeStudent(larry);
