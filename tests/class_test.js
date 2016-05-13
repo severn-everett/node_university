@@ -1,6 +1,6 @@
 var chai = require('chai');
 var expect = chai.expect;
-var _ = require("underscore");
+var _ = require("lodash");
 
 var Class = require("../lib/class.js");
 var Student = require("../lib/student.js");
