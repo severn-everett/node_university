@@ -2,13 +2,13 @@ var chai = require('chai');
 var expect = chai.expect;
 var _ = require("lodash");
 
-var Class = require("../lib/class.js");
+var UniversityClass = require("../lib/university_class.js");
 var Student = require("../lib/student.js");
 var Timeslots = require("../lib/timeslots.js");
 
-describe('Class Positive Attributes', function() {
+describe('UniversityClass Positive Attributes', function() {
   it("should construct a class with a name and a capacity", function() {
-    var introSpanish = new Class("Introduction to Spanish", 40);
+    var introSpanish = new UniversityClass("Introduction to Spanish", 40);
     expect(introSpanish).to.have.property("name");
     expect(introSpanish).to.have.property("capacity");
     expect(introSpanish.capacity).to.equal(40);
@@ -17,10 +17,10 @@ describe('Class Positive Attributes', function() {
   });
 });
 
-describe('Class Negative Attributes', function() {
+describe('UniversityClass Negative Attributes', function() {
   it("should require that a name is provided", function() {
     expect(function() {
-      var anonClass = new Class('', 40);
+      var anonClass = new UniversityClass('', 40);
     }).to.throw("A non-blank name must be provided");
   });
 
@@ -33,16 +33,16 @@ describe('Class Negative Attributes', function() {
   for (bad_type in invalid_capacities) {
     it("should not allow the student capacity to be " + bad_type, function() {
       expect(function() {
-        var emptyClass = new Class("Introduction to Spanish", invalid_capacities[bad_type]);
+        var emptyClass = new UniversityClass("Introduction to Spanish", invalid_capacities[bad_type]);
       }).to.throw("Capacity must be a positive integer greater than zero");
     });
   }
 });
 
-describe("Class Positive Actions", function() {
-  var introSpanish = new Class("Introduction to Spanish", 40);
+describe("UniversityClass Positive Actions", function() {
+  var introSpanish = new UniversityClass("Introduction to Spanish", 40);
 
-  describe("Class Roster", function() {
+  describe("UniversityClass Roster", function() {
     var john = new Student("John");
     var jane = new Student("Jane");
 
@@ -94,10 +94,10 @@ describe("Class Positive Actions", function() {
   });
 });
 
-describe("Class Negative Actions", function() {
-  var introSpanish = new Class("Introduction to Spanish", 2);
+describe("UniversityClass Negative Actions", function() {
+  var introSpanish = new UniversityClass("Introduction to Spanish", 2);
 
-  describe("Class Roster", function() {
+  describe("UniversityClass Roster", function() {
     var larry = new Student("Larry");
     var curly = new Student("Curly");
     var moe = new Student("Moe");
