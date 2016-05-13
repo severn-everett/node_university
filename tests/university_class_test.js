@@ -14,6 +14,20 @@ describe('UniversityClass Positive Attributes', function() {
     expect(introSpanish.capacity).to.equal(40);
     expect(introSpanish.classSize()).to.equal(0);
     expect(introSpanish.creditSize()).to.equal(0);
+    expect(introSpanish).to.have.property("timeslots");
+  });
+
+  it ("should allow a single timeslot object to be passed in to the constructor", function() {
+    var introSpanish = new UniversityClass("Introduction to Spanish", 40, Timeslots.FRIDAY_EVENING);
+    expect(introSpanish.timeslots).to.have.length(1);
+  });
+
+  it ("should allow timeslot objects to be passed in to the constructor", function() {
+    var introSpanish = new UniversityClass("Introduction to Spanish",
+      40,
+      [Timeslots.TUESDAY_EVENING, Timeslots.WEDNESDAY_EVENING, Timeslots.THURSDAY_EVENING]
+    );
+    expect(introSpanish.timeslots).to.have.length(3);
   });
 });
 
@@ -37,6 +51,18 @@ describe('UniversityClass Negative Attributes', function() {
       }).to.throw("Capacity must be a positive integer greater than zero");
     });
   }
+
+  it("should only allow either a timeslot object or an array to be passed in as the timeslot data", function() {
+    expect(function() {
+      var badClass = new UniversityClass("Bad Class", 40, "TUESDAY_EVENING");
+    }).to.throw("Timeslots passed in must be a single instance or an array of Timeslot objects");
+  });
+
+  it("should not allow an array of invalid objects to be passed in as the timeslot data", function() {
+    expect(function() {
+      var badClass = new UniversityClass("Bad Class", 40, ["TUESDAY EVENING"]);
+    }).to.throw("Must only add proper Timeslot values");
+  });
 });
 
 describe("UniversityClass Positive Actions", function() {
