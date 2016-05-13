@@ -129,12 +129,11 @@ describe("Class Negative Actions", function() {
       }).to.throw("Student \"Larry\" already added to this class");
     });
 
-    it("should fail to remove students when there are no students registered for the class", function() {
+    it("should not allow non-students to be removed", function() {
       introSpanish.addStudent(larry);
-      introSpanish.removeStudent(larry);
       expect(function() {
-        introSpanish.removeStudent(curly);
-      }).to.throw("Class is already empty");
+        introSpanish.removeStudent("Larry");
+      }).to.throw("Must only remove instances of Student");
     });
 
     it("should not remove a student that is not registered for the class", function() {
