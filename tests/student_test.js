@@ -1,5 +1,7 @@
 var chai = require("chai");
 var expect = chai.expect;
+
+var Errors = require("../lib/errors.js");
 var Student = require("../lib/student.js");
 var Timeslots = require("../lib/timeslots.js");
 var UniversityClass = require("../lib/university_class.js");
@@ -15,7 +17,7 @@ describe("Student Negative Attributes", function() {
   it("should fail if no name is provided", function() {
     expect(function() {
       var anon = new Student("");
-    }).to.throw("A non-blank name must be provided");
+    }).to.throw(Errors.TypeError, /A non-blank name must be provided/);
   });
 });
 
@@ -66,18 +68,30 @@ describe("Student Negative Actions", function() {
     severn.classes.clear();
   });
 
+  it("should only register UniversityClass instances", function() {
+    expect(function() {
+      severn.registerClass("Introduction to Spanish");
+    }).to.throw(Errors.TypeError, /Only instances of University Class may be registered/);
+  });
+
   it("should not register the same class more than once", function () {
     severn.registerClass(introSpanish);
     expect(function() {
       severn.registerClass(introSpanish);
-    }).to.throw("Student already registered for this class");
+    }).to.throw(Errors.DuplicateError, /Student already registered for this class/);
+  });
+
+  it("should only deregister UniversityClass instances", function() {
+    expect(function() {
+      severn.deregisterClass("Introduction to Spanish");
+    }).to.throw(Errors.TypeError, /Only instances of University Class may be deregistered/);
   });
 
   it("should not deregister a class that the student is not registered for", function() {
     severn.registerClass(introSpanish);
     expect(function() {
       severn.deregisterClass(currentAffairs);
-    }).to.throw("Student already not registered for this class");
+    }).to.throw(Errors.NotFoundError, /Student already not registered for this class/);
   });
 
   it("should not register classes with conflicting time slots", function() {
@@ -85,6 +99,6 @@ describe("Student Negative Actions", function() {
     severn.registerClass(currentAffairs);
     expect(function() {
       severn.registerClass(comparativeGovernment);
-    }).to.throw("Schedule conflict with another registered class");
+    }).to.throw(Errors.DuplicateError, /Schedule conflict with another registered class/);
   });
 });

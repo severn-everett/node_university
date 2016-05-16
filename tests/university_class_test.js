@@ -2,9 +2,10 @@ var chai = require('chai');
 var expect = chai.expect;
 var _ = require("lodash");
 
-var UniversityClass = require("../lib/university_class.js");
+var Errors = require("../lib/errors.js");
 var Student = require("../lib/student.js");
 var Timeslots = require("../lib/timeslots.js");
+var UniversityClass = require("../lib/university_class.js");
 
 describe('UniversityClass Positive Attributes', function() {
   it("should construct a class with a name and a capacity", function() {
@@ -35,7 +36,7 @@ describe('UniversityClass Negative Attributes', function() {
   it("should require that a name is provided", function() {
     expect(function() {
       var anonClass = new UniversityClass('', 40);
-    }).to.throw("A non-blank name must be provided");
+    }).to.throw(Errors.TypeError, /A non-blank name must be provided/);
   });
 
   var invalid_capacities = {
@@ -48,20 +49,20 @@ describe('UniversityClass Negative Attributes', function() {
     it("should not allow the student capacity to be " + bad_type, function() {
       expect(function() {
         var emptyClass = new UniversityClass("Introduction to Spanish", invalid_capacities[bad_type]);
-      }).to.throw("Capacity must be a positive integer greater than zero");
+      }).to.throw(Errors.TypeError, /Capacity must be a positive integer greater than zero/);
     });
   }
 
   it("should only allow either a timeslot object or an array to be passed in as the timeslot data", function() {
     expect(function() {
       var badClass = new UniversityClass("Bad Class", 40, "TUESDAY_EVENING");
-    }).to.throw("Timeslots passed in must be a single instance or an array of Timeslot objects");
+    }).to.throw(Errors.TypeError, /Timeslots passed in must be a single instance or an array of Timeslot objects/);
   });
 
   it("should not allow an array of invalid objects to be passed in as the timeslot data", function() {
     expect(function() {
       var badClass = new UniversityClass("Bad Class", 40, ["TUESDAY EVENING"]);
-    }).to.throw("Must only add proper Timeslot values");
+    }).to.throw(Errors.TypeError, /Must only add proper Timeslot values/);
   });
 });
 
@@ -145,28 +146,28 @@ describe("UniversityClass Negative Actions", function() {
       }).to.not.throw(Error);
       expect(function() {
         introSpanish.addStudent(moe);
-      }).to.throw("Class is already at capacity of 2");
+      }).to.throw(Errors.OutOfRangeError, /Class is already at capacity of 2/);
     });
 
     it("should not allow a student to be added multiple times", function() {
       introSpanish.addStudent(larry);
       expect(function() {
         introSpanish.addStudent(larry);
-      }).to.throw("Student \"Larry\" already added to this class");
+      }).to.throw(Errors.DuplicateError, /Student "Larry" already added to this class/);
     });
 
     it("should not allow non-students to be removed", function() {
       introSpanish.addStudent(larry);
       expect(function() {
         introSpanish.removeStudent("Larry");
-      }).to.throw("Must only remove instances of Student");
+      }).to.throw(Errors.TypeError, /Must only remove instances of Student/);
     });
 
     it("should not remove a student that is not registered for the class", function() {
       introSpanish.addStudent(larry);
       expect(function() {
         introSpanish.removeStudent(curly);
-      }).to.throw("Cannot remove student \"Curly\" - not registered for this class");
+      }).to.throw(Errors.NotFoundError, /Cannot remove student "Curly" - not registered for this class/);
     });
   });
 
@@ -178,21 +179,27 @@ describe("UniversityClass Negative Actions", function() {
     it("should not allow a timeslot addition that is not within the established list of timeslots", function() {
       expect(function() {
         introSpanish.addTimeslot("SATURDAY_MORNING");
-      }).to.throw("Must only add proper Timeslot values");
+      }).to.throw(Errors.TypeError, /Must only add proper Timeslot values/);
+      expect(function() {
+        introSpanish.addTimeslot({name:"Monday Morning", value: 20});
+      }).to.throw(Errors.Typeerror, /Must only add proper Timeslot values/);
+      expect(function() {
+        introSpanish.addTimeslot({name:"Monday Morning", value: 1});
+      }).to.throw(Errors.Typeerror, /Must only add proper Timeslot values/);
     });
 
     it("should not allow a timeslot to be removed if it is already present", function() {
       introSpanish.addTimeslot(Timeslots.THURSDAY_MORNING);
       expect(function() {
         introSpanish.addTimeslot(Timeslots.THURSDAY_MORNING);
-      }).to.throw("Class already has this timeslot");
+      }).to.throw(Errors.DuplicateError, /Class already has this timeslot/);
     });
 
     it("should not allow a timeslot removal that is not within the established list of timeslots", function() {
       introSpanish.addTimeslot(Timeslots.TUESDAY_AFTERNOON);
       expect(function() {
         introSpanish.removeTimeslot("TUESDAY_NIGHT");
-      }).to.throw("Must only remove proper Timeslot values");
+      }).to.throw(Errors.TypeError, /Must only remove proper Timeslot values/);
     });
 
     it("should not allow a timeslot to be removed if it is already not present", function() {
@@ -200,7 +207,7 @@ describe("UniversityClass Negative Actions", function() {
       introSpanish.removeTimeslot(Timeslots.TUESDAY_AFTERNOON);
       expect(function() {
         introSpanish.removeTimeslot(Timeslots.TUESDAY_AFTERNOON);
-      }).to.throw("Class already does not have this timeslot");
+      }).to.throw(Errors.NotFoundError, /Class already does not have this timeslot/);
     });
   });
 });
