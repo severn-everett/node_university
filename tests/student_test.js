@@ -8,7 +8,7 @@ var UniversityClass = require("../lib/university_class.js");
 
 describe("Student Positive Attributes", function() {
   it("should construct a student with a name", function() {
-    var severn = new Student("Severn");
+    var severn = new Student(1, "Severn");
     expect(severn).to.have.property("name");
   });
 });
@@ -16,17 +16,17 @@ describe("Student Positive Attributes", function() {
 describe("Student Negative Attributes", function() {
   it("should fail if no name is provided", function() {
     expect(function() {
-      var anon = new Student("");
+      var anon = new Student(1, "");
     }).to.throw(Errors.TypeError, /A non-blank name must be provided/);
   });
 });
 
 describe("Student Positive Actions", function() {
-  var severn = new Student("Severn");
-  var introSpanish = new UniversityClass("Introduction to Spanish", 40,
+  var severn = new Student(1, "Severn");
+  var introSpanish = new UniversityClass(1, "Introduction to Spanish", 40,
     [Timeslots.MONDAY_EVENING, Timeslots.TUESDAY_EVENING, Timeslots.WEDNESDAY_EVENING, Timeslots.THURSDAY_EVENING]
   );
-  var currentAffairs = new UniversityClass("Current Affairs", 20,
+  var currentAffairs = new UniversityClass(2, "Current Affairs", 20,
     [Timeslots.TUESDAY_MORNING, Timeslots.TUESDAY_AFTERNOON, Timeslots.THURSDAY_AFTERNOON]
   );
 
@@ -53,14 +53,14 @@ describe("Student Positive Actions", function() {
 });
 
 describe("Student Negative Actions", function() {
-  var severn = new Student("Severn");
-  var introSpanish = new UniversityClass("Introduction to Spanish", 40,
+  var severn = new Student(1, "Severn");
+  var introSpanish = new UniversityClass(1, "Introduction to Spanish", 40,
     [Timeslots.TUESDAY_EVENING, Timeslots.WEDNESDAY_EVENING, Timeslots.THURSDAY_EVENING]
   );
-  var currentAffairs = new UniversityClass("Current Affairs", 20,
+  var currentAffairs = new UniversityClass(2, "Current Affairs", 20,
     [Timeslots.MONDAY_AFTERNOON, Timeslots.TUESDAY_AFTERNOON, Timeslots.THURSDAY_AFTERNOON]
   );
-  var comparativeGovernment = new UniversityClass("Comparative Government", 25,
+  var comparativeGovernment = new UniversityClass(3, "Comparative Government", 25,
     [Timeslots.TUESDAY_AFTERNOON, Timeslots.WEDNESDAY_MORNING, Timeslots.THURSDAY_MORNING]
   );
 

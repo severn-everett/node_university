@@ -9,7 +9,7 @@ var UniversityClass = require("../lib/university_class.js");
 
 describe('UniversityClass Positive Attributes', function() {
   it("should construct a class with a name and a capacity", function() {
-    var introSpanish = new UniversityClass("Introduction to Spanish", 40);
+    var introSpanish = new UniversityClass(1, "Introduction to Spanish", 40);
     expect(introSpanish).to.have.property("name");
     expect(introSpanish).to.have.property("capacity");
     expect(introSpanish.capacity).to.equal(40);
@@ -19,12 +19,12 @@ describe('UniversityClass Positive Attributes', function() {
   });
 
   it ("should allow a single timeslot object to be passed in to the constructor", function() {
-    var introSpanish = new UniversityClass("Introduction to Spanish", 40, Timeslots.FRIDAY_EVENING);
+    var introSpanish = new UniversityClass(1, "Introduction to Spanish", 40, Timeslots.FRIDAY_EVENING);
     expect(introSpanish.timeslots).to.have.length(1);
   });
 
   it ("should allow timeslot objects to be passed in to the constructor", function() {
-    var introSpanish = new UniversityClass("Introduction to Spanish",
+    var introSpanish = new UniversityClass(1, "Introduction to Spanish",
       40,
       [Timeslots.TUESDAY_EVENING, Timeslots.WEDNESDAY_EVENING, Timeslots.THURSDAY_EVENING]
     );
@@ -35,7 +35,7 @@ describe('UniversityClass Positive Attributes', function() {
 describe('UniversityClass Negative Attributes', function() {
   it("should require that a name is provided", function() {
     expect(function() {
-      var anonClass = new UniversityClass('', 40);
+      var anonClass = new UniversityClass(1, '', 40);
     }).to.throw(Errors.TypeError, /A non-blank name must be provided/);
   });
 
@@ -48,30 +48,30 @@ describe('UniversityClass Negative Attributes', function() {
   for (bad_type in invalid_capacities) {
     it("should not allow the student capacity to be " + bad_type, function() {
       expect(function() {
-        var emptyClass = new UniversityClass("Introduction to Spanish", invalid_capacities[bad_type]);
-      }).to.throw(Errors.TypeError, /Capacity must be a positive integer greater than zero/);
+        var emptyClass = new UniversityClass(1, "Introduction to Spanish", invalid_capacities[bad_type]);
+      }).to.throw(Errors.TypeError, /Capacity must be a positive integer/);
     });
   }
 
   it("should only allow either a timeslot object or an array to be passed in as the timeslot data", function() {
     expect(function() {
-      var badClass = new UniversityClass("Bad Class", 40, "TUESDAY_EVENING");
+      var badClass = new UniversityClass(1, "Bad Class", 40, "TUESDAY_EVENING");
     }).to.throw(Errors.TypeError, /Timeslots passed in must be a single instance or an array of Timeslot objects/);
   });
 
   it("should not allow an array of invalid objects to be passed in as the timeslot data", function() {
     expect(function() {
-      var badClass = new UniversityClass("Bad Class", 40, ["TUESDAY EVENING"]);
+      var badClass = new UniversityClass(1, "Bad Class", 40, ["TUESDAY EVENING"]);
     }).to.throw(Errors.TypeError, /Must only add proper Timeslot values/);
   });
 });
 
 describe("UniversityClass Positive Actions", function() {
-  var introSpanish = new UniversityClass("Introduction to Spanish", 40);
+  var introSpanish = new UniversityClass(1, "Introduction to Spanish", 40);
 
   describe("UniversityClass Roster", function() {
-    var john = new Student("John");
-    var jane = new Student("Jane");
+    var john = new Student(1, "John");
+    var jane = new Student(2, "Jane");
 
     afterEach(function() {
       introSpanish.studentList.clear();
@@ -122,12 +122,12 @@ describe("UniversityClass Positive Actions", function() {
 });
 
 describe("UniversityClass Negative Actions", function() {
-  var introSpanish = new UniversityClass("Introduction to Spanish", 2);
+  var introSpanish = new UniversityClass(1, "Introduction to Spanish", 2);
 
   describe("UniversityClass Roster", function() {
-    var larry = new Student("Larry");
-    var curly = new Student("Curly");
-    var moe = new Student("Moe");
+    var larry = new Student(1, "Larry");
+    var curly = new Student(2, "Curly");
+    var moe = new Student(3, "Moe");
 
     afterEach(function() {
       introSpanish.studentList.clear();
